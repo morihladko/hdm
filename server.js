@@ -6,7 +6,6 @@ var express = require('express'),
 	exphbs  = require('express3-handlebars'),
 	mongodb = require('mongodb'),
 	monk    = require('monk'),
-	db      = monk('localhost/aplusr'),
 	_		= require('lodash')
 	
 	TOTAL_SUM = 20000;
@@ -34,6 +33,8 @@ var SampleApp = function() {
         //  Set the environment variables we need.
         self.ipaddress = process.env.OPENSHIFT_NODEJS_IP;
         self.port      = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+		self.mongo_host = process.env.OPENSHIFT_MONGODB_DB_HOST || 'localhost';
+		self.mongo_port = process.env.OPENSHIFT_MONGODB_DB_PORT || 27017;
 
         if (typeof self.ipaddress === "undefined") {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
@@ -245,7 +246,7 @@ var SampleApp = function() {
      *  the handlers.
      */
     self.initializeServer = function() {
-		var r, route, m;
+		var r, route, m, db;
 
         self.createRoutes();
         self.app = express();
@@ -257,6 +258,8 @@ var SampleApp = function() {
 
 		self.app.use(express.urlencoded());
 		self.app.use(express.json());
+
+		db = monk(self.mongo_host + ':' + self.mongo_port + '/aplusr'),
 
 		self.app.use(function(req, res, next) {
 			req.db = db;

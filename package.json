@@ -18,18 +18,29 @@
     "type": "git",
     "url": "https://github.com/openshift/origin-server"
   },
-
   "engines": {
     "node": ">= 0.6.0",
     "npm": ">= 1.0.0"
   },
-
   "dependencies": {
-    "express": "~3.4.4"
+    "express": "~3.4.8",
+    "express-mailer": "~0.2.3",
+    "express3-handlebars": "~0.5.0",
+    "mongodb": "~1.4.7",
+    "monk": "~0.9.0",
+    "lodash": "~2.4.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-jshint": "~0.10.0",
+    "jshint-stylish": "~0.4.0",
+    "grunt-contrib-uglify": "~0.5.1",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-cssmin": "~0.10.0",
+    "grunt-bower-task": "~0.4.0"
+  },
   "bundleDependencies": [],
-
   "private": true,
   "main": "server.js"
 }

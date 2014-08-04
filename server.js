@@ -1,8 +1,15 @@
 #!/bin/env node
 //  OpenShift sample Node application
-var express = require('express');
-var fs      = require('fs');
-
+var express = require('express'),
+	fs      = require('fs'),
+	mailer  = require('express-mailer'),
+	exphbs  = require('express3-handlebars'),
+	mongodb = require('mongodb'),
+	monk    = require('monk'),
+	db      = monk('localhost/aplusr'),
+	_		= require('lodash')
+	
+	TOTAL_SUM = 20000;
 
 /**
  *  Define the sample application.
@@ -12,10 +19,13 @@ var SampleApp = function() {
     //  Scope.
     var self = this;
 
-
     /*  ================================================================  */
     /*  Helper functions.                                                 */
     /*  ================================================================  */
+
+	self.getCurrentPosition = function() {
+		return Math.min(1.0, self._current_contributions / TOTAL_SUM);
+	};
 
     /**
      *  Set up server IP address and port # using env variables/defaults.
@@ -89,6 +99,55 @@ var SampleApp = function() {
     /*  App server functions (main app logic here).                       */
     /*  ================================================================  */
 
+	self.donate = function(req, res, data) {
+		var db = req.db,
+			donations = db.get('donations');
+
+		donations.insert({
+				'name': data.name,
+				'email': data.email,
+				'contribution': data.contribution
+			}, function(err, doc) {
+				if (err) {
+					res.json({
+						'success': false,
+						'errors': [err]
+					})
+					return;
+				}
+
+				self._current_contributions += data.contribution;
+
+				self.app.mailer.send({
+						template: 'email',
+						attachments: [{
+							filename: 'blahoprani.pdf',
+							filePath: __dirname + '/attachments/jeden_svet.pdf'
+						}]
+					}, {
+						to: data.email,
+						subject: 'Hura Do Mexika',
+
+					}, function (err) {
+						if (err) {
+						  // handle error
+							res.json({
+								'success': false,
+								'errors': [err]
+							})
+							return;
+						}
+
+						res.json({
+							'success': true,
+							'current_pos': self.getCurrentPosition() 
+						});
+					} 
+				);
+			}
+		);
+	}
+
     /**
      *  Create the routing table entries + handlers for the application.
      */
@@ -99,6 +158,80 @@ var SampleApp = function() {
             var link = "http://i.imgur.com/kmbjB.png";
             res.send("<html><body><img src='" + link + "'></body></html>");
         };
+
+		self.routes['/donate'] = {
+			'post': function(req, res) {
+				var errors = [],
+					data = _(req.body).pick(['name', 'email']).defaults({'name': '', 'email': '', 'contribution': ''}).valueOf();
+
+				data.contribution = parseInt(req.body.contribution || req.body['contr-other'], 10);
+				
+				// validation
+				_.forEach(data, function(val, key) {
+					console.log(key, val);
+					if (!val) {
+						errors.push('Parameter [' + key + '] is required');
+					}
+				})
+				
+				if (!(data.contribution > 0)) {
+					errors.push('Contribution has to be positive number');
+				}
+
+				if (!errors.length) {
+					self.donate(req, res, data);
+				} else {
+					console.log('wtf');
+					res.json({
+						'success': false,
+						'errors': errors
+					});
+				}
+			}
+		};
+
+		self.routes['/current_pos'] = function(req, res) {
+			var donations, db = req.db;
+
+			if (_.isUndefined(self._current_contributions)) {
+				donations = db.get('donations');
+
+				donations.find().on('success', function(donations) {
+					var contributions = _.reduce(donations, function(sum, donation) {
+						return sum + donation.contribution;
+					}, 0);
+
+					self._current_contributions = contributions;
+
+					res.json(self.getCurrentPosition());
+				})
+			} else {
+				res.json(self._current_contributions / TOTAL_SUM);
+			}
+		};
+
+		self.routes['/send'] = function(req, res) {
+			self.app.mailer.send({
+					template: 'email',
+					attachments: [{
+						filename: 'blahoprani.pdf',
+						filePath: __dirname + '/attachments/jeden_svet.pdf'
+					}]
+				}, {
+					to: 'morihladko@gmail.com',
+					subject: 'Hola',
+
+				}, function (err) {
+					if (err) {
+					  // handle error
+					  console.log(err);
+					  res.send('There was an error sending the email');
+					  return;
+					}
+					res.send('Email Sent');
+				} 
+			);
+		};
 
         self.routes['/'] = function(req, res) {
             res.setHeader('Content-Type', 'text/html');
@@ -112,12 +245,35 @@ var SampleApp = function() {
      *  the handlers.
      */
     self.initializeServer = function() {
+		var r, route, m;
+
         self.createRoutes();
-        self.app = express.createServer();
+        self.app = express();
+
+		self.app.use('/static', express.static(__dirname + '/static'));
+		self.app.set('views', __dirname + '/views');
+		self.app.engine('handlebars', exphbs());
+		self.app.set('view engine', 'handlebars');
+
+		self.app.use(express.urlencoded());
+		self.app.use(express.json());
+
+		self.app.use(function(req, res, next) {
+			req.db = db;
+			next();
+		});
 
         //  Add handlers for the app (from the routes).
-        for (var r in self.routes) {
-            self.app.get(r, self.routes[r]);
+        for (r in self.routes) {
+			route = self.routes[r];
+
+			if (typeof route === 'function') {
+				self.app.get(r, route);
+			} else {
+				for (m in route) {
+					self.app[m](r, route[m]);
+				}
+			}
         }
     };
 
@@ -144,6 +300,7 @@ var SampleApp = function() {
             console.log('%s: Node server started on %s:%d ...',
                         Date(Date.now() ), self.ipaddress, self.port);
         });
+
     };
 
 };   /*  Sample Application.  */
@@ -155,5 +312,36 @@ var SampleApp = function() {
  */
 var zapp = new SampleApp();
 zapp.initialize();
-zapp.start();
 
+mailer.extend(zapp.app, {
+	from: 'Atka a Radan <huradomexika@gmail.com>',
+	host: 'smtp.gmail.com',
+	secureConnection: true,
+	port: 465,
+	transportMethod: 'SMTP',
+	auth: {
+		user: 'huradomexika@gmail.com',
+		pass: 'atkaaradansaberu'
+	}
+});
+
+zapp.app.mailer.send({
+	template: 'email',
+	to: 'morihladko@gmail.com',
+	subject: 'Hola',
+	attachments: [{
+		filename: 'blahoprani.pdf',
+		path: __dirname + '/attachments/jeden_svet.pdf'
+	}]
+
+},
+function (err) {
+	if (err) {
+	  // handle error
+	  console.log(err);
+	  res.send('There was an error sending the email');
+	  return;
+	}
+});
+
+zapp.start();

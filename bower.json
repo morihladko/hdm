@@ -1,0 +1,19 @@
+{
+  "name": "aplusr",
+  "version": "1.0.1",
+  "authors": [
+    "Peter Morihladko <morihladko@gmail.com>"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "d3": "~3.4.11"
+  }
+}

@@ -1,0 +1,480 @@
+/*! HTML5 Boilerplate v4.3.0 | MIT License | http://h5bp.com/ */
+
+/*
+ * What follows is the result of much research on cross-browser styling.
+ * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
+ * Kroc Camen, and the H5BP dev community and team.
+ */
+
+/* ==========================================================================
+   Base styles: opinionated defaults
+   ========================================================================== */
+*, *:before, *:after {
+  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+}
+
+html {
+    color: #222;
+    font-size: 1em;
+    line-height: 1.4;
+}
+
+/*
+ * Remove text-shadow in selection highlight: h5bp.com/i
+ * These selection rule sets have to be separate.
+ * Customize the background color to match your design.
+ */
+
+::-moz-selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+::selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+/*
+ * A better looking default horizontal rule
+ */
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+/*
+ * Remove the gap between images, videos, audio and canvas and the bottom of
+ * their containers: h5bp.com/i/440
+ */
+
+audio,
+canvas,
+img,
+svg,
+video {
+    vertical-align: middle;
+}
+
+/*
+ * Remove default fieldset styles.
+ */
+
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/*
+ * Allow only vertical resizing of textareas.
+ */
+
+textarea {
+    resize: vertical;
+}
+
+/* ==========================================================================
+   Browse Happy prompt
+   ========================================================================== */
+
+.browsehappy {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+
+.ir {
+    border: 0;
+    font: 0/0 a !important;
+    text-shadow: none !important;
+    color: transparent !important;
+    display: block;
+    background-color: transparent;
+}
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+body {
+	font-family: 'Open Sans', Arial, sans-serif;
+}
+
+.wrap {
+	width: 1090px;
+	margin: 0 auto;
+}
+
+.text-viva-la-mexico {
+	background-image: url('../img/text_viva_la_mexico.png');
+	width: 1059px;
+	height: 143px;
+}
+
+h1 {
+	margin: 60px auto; 
+
+}
+
+blockquote {
+	background-image: url('../img/quote.gif');
+	background-repeat: no-repeat;
+	background-position: 0 10px;
+	padding-left: 26px;
+
+	font-style: italic;
+	font-size: 50px;
+}
+
+#story {
+	position: relative;
+	height: 415px;
+}
+
+#story .img-radan {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+#story .img-atka {
+	position: absolute;
+	right: 0;
+	top: 100px;
+}
+
+#story .bq-radan {
+	position: absolute;
+	left: 240px;
+	top: 0;
+}
+
+
+#story .bq-atka {
+	position: absolute;
+	left: 400px;
+	top: 135px;
+}
+
+.about {
+	font-size: 30px;
+	text-align: center;
+	width: 880px;
+	margin: 0 auto 40px;
+}
+
+#donate {
+	position: relative;
+
+	padding-top: 474px;
+}
+
+#map {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	background-image: url('../img/mapa.jpg');
+	background-repeat: no-repeat;
+	width: 1058px;
+	height: 474px;
+}
+
+#plane {
+	background-image: url('../img/lietadlo.png');
+	background-repeat: no-repeat;
+	width: 183px;
+	height: 78px;
+}
+
+.btn-big {
+	font-size: 80px;
+	line-height: 167px;
+	display: block;
+	width: 552px;
+	height: 167px;
+
+	border: none;
+	background-color: #39b54a;
+	border-radius: 8px;
+
+	text-align: center;
+	margin: 0 auto;
+	color: white;
+	margin-top: 20px;
+	margin-bottom: 100px;
+}
+
+#donate-form {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 2;
+
+	height: 474px;
+	width: 1058px;
+	background-color: rgba(255, 255, 255, 0.7);
+
+	padding-left: 200px;
+	padding-top: 20px;
+
+	font-size: 30px;
+	color: #333333;
+}
+
+#donate-form fieldset {
+	border: none;
+	padding: 0;
+	margin: 20px 0;
+}
+
+#donate-form .nameemail label {
+	display: inline-block;
+	width: 100px;
+	margin-bottom: 20px;
+}
+
+#donate-form input[type="text"], 
+#donate-form input[type="email"] {
+	border: 2px solid gray;
+	border-radius: 4px;
+	background-color: rgba(255, 255, 255, 0.5);
+	padding: 0 10px;
+	height: 41px;
+	font-size: 20px;
+	line-height: 41px;
+	width: 287px;
+}
+
+#donate-form input[type="radio"] {
+	margin-right: 20px;
+}
+
+#contr-other-km,
+#contr-other-kc {
+	position: relative;
+	display: inline-block;
+	width: 287px;
+	left: -287px;
+	z-index: -1;
+	font-size: 20px;
+	padding: 0 10px;
+}
+
+#contr-other-kc span {
+	color: transparent;
+}
+
+#contr-other-km {
+	left: -574px;
+	text-align: right;
+}
+
+li.longer {
+	width: 1000px;
+}
+
+ul {
+	padding: 0;
+	margin: 0;
+	margin-left: 40px;
+}
+
+li {
+	list-style: none;
+	padding: 0;
+}
+
+path {
+	fill: none;
+}
+
+form label {
+	cursor: pointer;
+}
+
+.error-msg {
+	font-size: 12px;
+	opacity: 0;
+	color: red;
+}
+
+.error + .error-msg,
+fieldset.error .error-msg {
+	opacity: 1;
+	transition: opacity 1s;
+}
+
+input.error {
+	border-color: red !important;
+	transition: border 1s;
+}
+
+li.error-msg {
+	padding-left: 60px;
+	margin-top: 5px;
+}
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+
+/*
+ * Hide visually and from screen readers: h5bp.com/u
+ */
+
+.hidden {
+    display: none !important;
+    visibility: hidden;
+}
+
+/*
+ * Hide only visually, but have it available for screen readers: h5bp.com/v
+ */
+
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+/*
+ * Extends the .visuallyhidden class to allow the element to be focusable
+ * when navigated to via the keyboard: h5bp.com/p
+ */
+
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+}
+
+/*
+ * Hide visually and from screen readers, but maintain layout
+ */
+
+.invisible {
+    visibility: hidden;
+}
+
+/*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    `contenteditable` attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+
+.clearfix:before,
+.clearfix:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   These examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 35em) {
+    /* Style adjustments for viewports that meet the condition */
+}
+
+@media print,
+       (-o-min-device-pixel-ratio: 5/4),
+       (-webkit-min-device-pixel-ratio: 1.25),
+       (min-resolution: 120dpi) {
+    /* Style adjustments for high resolution devices */
+}
+
+/* ==========================================================================
+   Print styles.
+   Inlined to avoid the additional HTTP request: h5bp.com/r
+   ========================================================================== */
+
+@media print {
+    * {
+        background: transparent !important;
+        color: #000 !important; /* Black prints faster: h5bp.com/s */
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    /*
+     * Don't show links that are fragment identifiers,
+     * or use the `javascript:` pseudo protocol
+     */
+
+    a[href^="#"]:after,
+    a[href^="javascript:"]:after {
+        content: "";
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        page-break-inside: avoid;
+    }
+
+    thead {
+        display: table-header-group; /* h5bp.com/t */
+    }
+
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}

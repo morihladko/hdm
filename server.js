@@ -259,7 +259,7 @@ var SampleApp = function() {
 		self.app.use(express.urlencoded());
 		self.app.use(express.json());
 
-		db = monk(self.mongo_host + ':' + self.mongo_port + '/hdm'),
+		db = monk('admin:cIKteuAlGtrM@' + self.mongo_host + ':' + self.mongo_port + '/hdm'),
 
 		self.app.use(function(req, res, next) {
 			req.db = db;

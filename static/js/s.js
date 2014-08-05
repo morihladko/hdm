@@ -5,20 +5,30 @@
 		current_pos_promise,
 		messanger;
 
+	function str(msg) {
+		try {
+			if (typeof msg === "object") {
+				return JSON.stringify(msg);
+			}
+			return msg.toString();
+		} catch (e) {}
+
+		return msg;
+	}
 	
 	function Messanger() {
 		this.$el = $('#messanger');
 
 		this.success = function(msg) {
-			this.$el.append($("<div class='msg msg-success' />").text(msg));
+			this.$el.append($("<div class='msg msg-success' />").text(str(msg)));
 		}
 
 		this.error = function(msg) {
-			this.$el.append($("<div class='msg msg-error' />").text(msg));
+			this.$el.append($("<div class='msg msg-error' />").text(str(msg)));
 		}
 
 		this.info = function(msg) {
-			this.$el.append($("<div class='msg msg-info' />").text(msg));
+			this.$el.append($("<div class='msg msg-info' />").text(str(msg)));
 		}
 	}
 
@@ -92,22 +102,13 @@
 						global.mapAnimate();
 
 						messanger.success("Vdaka. Dojde mail");
-
-						$.post('/send', 'id=' + msg.id).done(function(msg) {
-							if (msg.success === true) {
-								messanger.info("Mail bol odoslany");
-							} else {
-								messanger.error("Mail sa nepodarilo odoslat");
-							}
-						}).fail(function() {
-							messanger.error("Nastala chyba v komunikácii so serverom pri posielani mailu");
-						});
-						
 					} else {
 						messanger.error(msg.errors);
 					}
 				}).fail(function() {
 					messanger.error("Nastala chyba v komunikacii so serverom");
+				}).always(function() {
+					$form.find('input[type="submit"]').prop('disabled', false);
 				});
 			}
 		});

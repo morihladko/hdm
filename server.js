@@ -7,8 +7,15 @@ var express = require('express'),
 	mongodb = require('mongodb'),
 	monk    = require('monk'),
 	_		= require('lodash')
+	winston = require('winston')
 	
 	TOTAL_SUM = 20000;
+
+var logger = new (winston.Logger)({
+	transports: [
+		new (winston.transports.Console)({'timestamp':true})
+	]
+});
 
 /**
  *  Define the sample application.
@@ -25,8 +32,6 @@ var SampleApp = function() {
 	self.getCurrentPosition = function() {
 		return Math.min(1.0, self._current_contributions / TOTAL_SUM);
 	};
-
-	self.mails = {};
 
     /**
      *  Set up server IP address and port # using env variables/defaults.
@@ -109,9 +114,12 @@ var SampleApp = function() {
 		donations.insert({
 				'name': data.name,
 				'email': data.email,
-				'contribution': data.contribution
+				'contribution': data.contribution,
+				'email_sent': false
 			}, function(err, doc) {
 				if (err) {
+					logger.log('error', 'db insert fail', {error: err, data: data});
+
 					res.json({
 						'success': false,
 						'errors': [err],
@@ -120,7 +128,20 @@ var SampleApp = function() {
 				}
 
 				self._current_contributions += data.contribution;
-				self.mails[doc._id] = doc.email;
+
+				_.defer(function() {
+					self.sendMail(data.email, function(err) {
+						if (err) {
+							logger.log('error', 'mail fail for %s, %s', doc.email, doc._id, err);
+							return;
+						}
+
+						logger.log('info', 'mail sent to %s', doc.email)
+
+						doc.email_sent = true;	
+						donations.updateById(doc._id, doc);
+					});
+				});
 
 				res.json({
 					'success': true,
@@ -129,6 +150,20 @@ var SampleApp = function() {
 				});
 			}
 		);
+	}
+
+	self.sendMail = function(email, callback) {
+		self.app.mailer.send({
+			template: 'email',
+			attachments: [{
+				filename: 'blahoprani.pdf',
+				filePath: __dirname + '/attachments/jeden_svet.pdf'
+			}]
+		}, {
+			to: email,
+			subject: 'Hura Do Mexika',
+
+		}, callback);
 	}
 
     /**
@@ -143,6 +178,8 @@ var SampleApp = function() {
 					data = _(req.body).pick(['name', 'email']).defaults({'name': '', 'email': '', 'contribution': ''}).valueOf();
 
 				data.contribution = parseInt(req.body.contribution || req.body['contr-other'], 10);
+
+				logger.log('info', 'Donation', data);
 				
 				// validation
 				_.forEach(data, function(val, key) {
@@ -159,7 +196,6 @@ var SampleApp = function() {
 				if (!errors.length) {
 					self.donate(req, res, data);
 				} else {
-					console.log('wtf');
 					res.json({
 						'success': false,
 						'errors': errors
@@ -176,53 +212,15 @@ var SampleApp = function() {
 
 				donations.find().on('success', function(donations) {
 					var contributions = _.reduce(donations, function(sum, donation) {
-						return sum + donation.contribution;
+						return donation.contribution ? sum + donation.contribution : sum;
 					}, 0);
 
 					self._current_contributions = contributions;
 
 					res.json(self.getCurrentPosition());
-				})
-			} else {
-				res.json(self._current_contributions / TOTAL_SUM);
-			}
-		};
-
-		self.routes['/send'] = {
-			'post': function(req, res) {
-				var id = req.body.id, email;
-
-				if (!id) {
-					res.json({'success': false, 'errors': ['Missing id']});
-					return;
-				}
-
-				email = self.mails[id];
-
-				if (!email) {
-					res.json({'success': false, 'errors': ['Ejha, toto by sa nemalo stat v DB este nie je email']});
-					return;	
-				} 
-
-				self.app.mailer.send({
-					template: 'email',
-					attachments: [{
-						filename: 'blahoprani.pdf',
-						filePath: __dirname + '/attachments/jeden_svet.pdf'
-					}]
-				}, {
-					to: email,
-					subject: 'Hura Do Mexika',
-
-				}, function (err) {
-					if (err) {
-					  // handle error
-						res.json({'success': false, 'errors': [err]});
-						return;
-					}
-
-					res.json({'success': true});
 				});
+			} else {
+				res.json(self.getCurrentPosition());
 			}
 		};
 
@@ -251,7 +249,7 @@ var SampleApp = function() {
 		self.app.use(express.urlencoded());
 		self.app.use(express.json());
 
-		db = monk('admin:cIKteuAlGtrM@' + self.mongo_host + ':' + self.mongo_port + '/hdm'),
+		db = monk(/*'admin:cIKteuAlGtrM@' + */self.mongo_host + ':' + self.mongo_port + '/hdm'),
 
 		self.app.use(function(req, res, next) {
 			req.db = db;

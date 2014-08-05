@@ -2,12 +2,11 @@
 //  OpenShift sample Node application
 var express = require('express'),
 	fs      = require('fs'),
-	mailer  = require('express-mailer'),
-	exphbs  = require('express3-handlebars'),
 	mongodb = require('mongodb'),
 	monk    = require('monk'),
-	_		= require('lodash')
-	winston = require('winston')
+	_		= require('lodash'),
+	winston = require('winston'),
+	request = require('request'),
 	
 	TOTAL_SUM = 20000;
 
@@ -153,17 +152,31 @@ var SampleApp = function() {
 	}
 
 	self.sendMail = function(email, callback) {
-		self.app.mailer.send({
-			template: 'email',
-			attachments: [{
-				filename: 'blahoprani.pdf',
-				filePath: __dirname + '/attachments/pdfko.pdf'
-			}]
-		}, {
-			to: email,
-			subject: 'Hura Do Mexika',
+		request('http://dev.atteq.com/~peter/hdm/send.php?to=' + email, function(error, response, body) {
+			if (error) {
+				callback(error);
+				return;
+			};
 
-		}, callback);
+			if (response.statusCode != 200) {
+				callback('Mailer status: ' + response.statusCode);
+				return;
+			}
+
+			try {
+				body = JSON.parse(body);
+			} catch (e) {
+				callback('Can\'t parse body: ' + body);
+				return;
+			}
+
+			if (body !== true) {
+				callback("Mail server respond: " + JSON.stringify(body));
+				return;
+			}
+
+			callback()
+		});
 	}
 
     /**
@@ -183,7 +196,6 @@ var SampleApp = function() {
 				
 				// validation
 				_.forEach(data, function(val, key) {
-					console.log(key, val);
 					if (!val) {
 						errors.push('Parameter [' + key + '] is required');
 					}
@@ -242,9 +254,6 @@ var SampleApp = function() {
         self.app = express();
 
 		self.app.use('/static', express.static(__dirname + '/static'));
-		self.app.set('views', __dirname + '/views');
-		self.app.engine('handlebars', exphbs());
-		self.app.set('view engine', 'handlebars');
 
 		self.app.use(express.urlencoded());
 		self.app.use(express.json());
@@ -305,17 +314,5 @@ var SampleApp = function() {
  */
 var zapp = new SampleApp();
 zapp.initialize();
-
-mailer.extend(zapp.app, {
-	from: 'Atka a Radan <huradomexika@gmail.com>',
-	host: 'smtp.gmail.com',
-	secureConnection: true,
-	port: 465,
-	transportMethod: 'SMTP',
-	auth: {
-		user: 'huradomexika@gmail.com',
-		pass: 'atkaaradansaberu'
-	}
-});
 
 zapp.start();

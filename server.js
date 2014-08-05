@@ -157,7 +157,7 @@ var SampleApp = function() {
 			template: 'email',
 			attachments: [{
 				filename: 'blahoprani.pdf',
-				filePath: __dirname + '/attachments/jeden_svet.pdf'
+				filePath: __dirname + '/attachments/pdfko.pdf'
 			}]
 		}, {
 			to: email,

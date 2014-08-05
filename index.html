@@ -5,12 +5,12 @@
   <title>Hurá do mexika</title>
   <link rel="stylesheet" href="static/css/normalize.css">
   <link rel="stylesheet" href="static/css/main.css">	
-  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Ubuntu:400,700|Open+Sans:400italic,400' rel='stylesheet' type='text/css'>
   <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.min.js"></script>
 </head>
 <body class="big-bgr">
 	<div class="wrap">
-		<h1 class="ir text text-viva-la-mexico">VIVA LA MÉXICO</h1>
+		<h1><img src="static/img/kvietok.png" alt="" class="left-img"/><span class="ir text text-viva-la-mexico">VIVA LA MÉXICO</span><img src="static/img/kvietok.png" alt="" class="right-img"/></h1>
 	 
 		<div id="story">
 			<img src="static/img/radan.jpg" alt="radan" class="img-radan" />
@@ -24,22 +24,24 @@
 			</blockquote>
 
 		</div>
-
+		<div class="line"></div>
 		<p class="about">
 			Kamarádi a kamarádky, jsme moc rádi, ze jste přijali pozvání na naši svatbu. Nejlepší dar od vás bude pár kilometrů, které nás posunou na naši svatební cestu do Mexika.
 		</p>
 
+
 		<div id="donate">
+			<img class="birdy" src="static/img/vtacik.png" alt="" />
 			<div id="map">
 			</div>
-			<form action="#" class="" id="donate-form">
+			<form action="#" class="hidden" id="donate-form">
 				<fieldset class="contributions">
-					Posun nas o:
+					<strong>Posun nas o:</strong>
 					<ul>
 						<li><label><input type="radio" name="contribution" value="500" />100 km (500 Kc)</label></li>
 						<li><label><input type="radio" name="contribution" value="1000" />200 km (1000 Kc)</label></li>
 						<li><label><input type="radio" name="contribution" value="2000" />400 km (2000 Kc)</label></li>
-						<li class="longer"><label for="form-contr-other">iné: </label><input type="text" name="contr-other" id="form-contr-other" /><span id="contr-other-kc">Kč</span><span id="contr-other-km">100 km</span></li>
+						<li class="longer"><label for="form-contr-other">iná čiastka: </label><div class="super-input"><input type="text" name="contr-other" id="form-contr-other" /><span id="contr-other-kc">Kč</span><span id="contr-other-km">100 km</span></div></li>
 						<li class="error-msg">Zvol alebo zadaj nejaku hodontu (kladne cislo)</li>
 					</ul>
 				</fieldset>
@@ -48,10 +50,11 @@
 					<label for="form-name">Meno: </label><input type="text" id="form-name" name="name" /> <span class="error-msg">Zadaj meno</span><br />
 					<label for="form-email">Email: </label><input type="email" id="form-email" name="email" /> <span class="error-msg">Zadaj email</span>
 				</fieldset>
+				<input type="submit" class="btn btn-blue" value="Pošli"/>
 
-				<input type="submit" />
 
 			</form>
+			<div id="messanger"></div>
 			<button class="btn btn-big">POSUN NAS</button>
 	</div>
 
@@ -67,7 +70,9 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
-  <script src="static/js/waypoints.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.4/waypoints.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/1.4.11/jquery.scrollTo.min.js"></script>
+  
   <script src="static/js/s.js"></script>
   <script src="static/js/d3.js"></script>
 </body>

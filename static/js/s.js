@@ -2,7 +2,25 @@
 	'use strict';
 	var $btn, $form, $form_email, $form_name, 
 		$contribution_other, $contribution_other_km, $contribution_other_kc, $contribution_radios,
-		current_pos_promise;
+		current_pos_promise,
+		messanger;
+
+	
+	function Messanger() {
+		this.$el = $('#messanger');
+
+		this.success = function(msg) {
+			this.$el.append($("<div class='msg msg-success' />").text(msg));
+		}
+
+		this.error = function(msg) {
+			this.$el.append($("<div class='msg msg-error' />").text(msg));
+		}
+
+		this.info = function(msg) {
+			this.$el.append($("<div class='msg msg-info' />").text(msg));
+		}
+	}
 
 	function validate_email() {
 		return this.val().match(/^.+@.+$/);
@@ -38,6 +56,9 @@
 		$form = $('form');
 		$form_email = $("#form-email");
 		$form_name = $("#form-name");
+		
+		messanger = new Messanger();
+		global.messanger = messanger;
 
 		$form.hide().removeClass('hidden');
 
@@ -48,6 +69,7 @@
 		$btn.on('click', function() {
 			$form.fadeIn('fast');
 			$btn.prop('disabled', true);
+			$(window).scrollTo($form, 1000);
 		});
 
 		$form.on('submit', function(ev) {
@@ -60,13 +82,32 @@
 			c = check_contributions();
 
 			if (a && b && c) {
+				$form.find('input[type="submit"]').prop('disabled', true);
+
 				$.post('/donate', $form.serialize()).done(function(msg) {
 					if (msg.success === true) {
+						$form.fadeOut('fast');
+
 						global.currentPos = msg.current_pos;
 						global.mapAnimate();
+
+						messanger.success("Vdaka. Dojde mail");
+
+						$.post('/send', 'id=' + msg.id).done(function(msg) {
+							if (msg.success === true) {
+								messanger.info("Mail bol odoslany");
+							} else {
+								messanger.error("Mail sa nepodarilo odoslat");
+							}
+						}).fail(function() {
+							messanger.error("Nastala chyba v komunikácii so serverom pri posielani mailu");
+						});
+						
 					} else {
-						alert(msg.errors.join('; '));
+						messanger.error(msg.errors);
 					}
+				}).fail(function() {
+					messanger.error("Nastala chyba v komunikacii so serverom");
 				});
 			}
 		});
@@ -111,7 +152,7 @@
 				return $(window).height() - $(this).height();
 			},
 			triggerOnce: true
-		})
+		});
 
 	});
 

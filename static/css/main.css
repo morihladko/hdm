@@ -108,19 +108,45 @@ body {
 }
 
 .wrap {
-	width: 1090px;
+	width: 1280px;
 	margin: 0 auto;
+	background-image: url('../img/bgr.png');
+	background-repeat: repeat-y;
+	background-position: 10px 0;
+
+	padding-left: 140px;
+	padding-right: 80px;
 }
 
 .text-viva-la-mexico {
 	background-image: url('../img/text_viva_la_mexico.png');
-	width: 1059px;
-	height: 143px;
+	width: 720px;
+	height: 98px;
 }
 
-h1 {
-	margin: 60px auto; 
 
+h1 {
+	position: relative;
+	height: 151px;
+	margin: 0 0 80px;
+}
+h1 .text {
+	position: absolute;
+	left: 213px;
+	top: 55px;
+}
+
+h1 img {
+	position: absolute;
+	top: 83px;
+}
+
+h1 .left-img {
+	left: 89px;
+}
+
+h1 .right-img {
+	left: 971px;
 }
 
 blockquote {
@@ -135,45 +161,61 @@ blockquote {
 
 #story {
 	position: relative;
-	height: 415px;
+	height: 343px;
 }
 
 #story .img-radan {
 	position: absolute;
-	left: 0;
+	left: 20px;
 	top: 0;
 }
 
 #story .img-atka {
 	position: absolute;
-	right: 0;
-	top: 100px;
+	left: 817px;
+	top: 68px;
 }
 
 #story .bq-radan {
 	position: absolute;
-	left: 240px;
-	top: 0;
+	left: 290px;
+	top: 29px;
 }
 
 
 #story .bq-atka {
 	position: absolute;
 	left: 400px;
-	top: 135px;
+	top: 189px;
+}
+
+blockquote {
+	margin: 0;
 }
 
 .about {
 	font-size: 30px;
 	text-align: center;
 	width: 880px;
-	margin: 0 auto 40px;
+	margin: 80px auto 40px;
+}
+
+.birdy {
+	width: 216px;
+	height: 168px;
+
+	position: absolute;
+
+	top: -171px;
+	left: 888px;
 }
 
 #donate {
 	position: relative;
 
 	padding-top: 474px;
+	padding-bottom: 40px;
+	margin-top: 200px;
 }
 
 #map {
@@ -185,6 +227,13 @@ blockquote {
 	background-repeat: no-repeat;
 	width: 1058px;
 	height: 474px;
+}
+
+.line {
+	height: 41px;
+	background-image: url('../img/lina.png');
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
 #plane {
@@ -208,8 +257,13 @@ blockquote {
 	text-align: center;
 	margin: 0 auto;
 	color: white;
-	margin-top: 20px;
-	margin-bottom: 100px;
+	margin-top: 60px;
+	margin-bottom: 60px;
+}
+
+.btn-big[disabled] {
+	opacity: 0.2;
+	transparent: opacity 2s;
 }
 
 #donate-form {
@@ -222,29 +276,40 @@ blockquote {
 	width: 1058px;
 	background-color: rgba(255, 255, 255, 0.7);
 
-	padding-left: 200px;
-	padding-top: 20px;
+	padding-top: 60px;
 
-	font-size: 30px;
+	border: 10px solid #00025f;
+
+	font-size: 27px;
 	color: #333333;
+
+	font-family: Ubuntu, Helvetica, Arial, sans-serif;
 }
 
 #donate-form fieldset {
 	border: none;
 	padding: 0;
 	margin: 20px 0;
+	margin-left: 50px;
+	float: left;
+	width: 450px;
+	overflow: visible;
+}
+
+#donate-form .nameemail {
+	padding-top: 73px;
 }
 
 #donate-form .nameemail label {
 	display: inline-block;
 	width: 100px;
 	margin-bottom: 20px;
+	margin-left: -50px;
 }
 
 #donate-form input[type="text"], 
 #donate-form input[type="email"] {
-	border: 2px solid gray;
-	border-radius: 4px;
+	border: 2px solid #3498db;
 	background-color: rgba(255, 255, 255, 0.5);
 	padding: 0 10px;
 	height: 41px;
@@ -259,13 +324,14 @@ blockquote {
 
 #contr-other-km,
 #contr-other-kc {
-	position: relative;
+	position: absolute;
 	display: inline-block;
 	width: 287px;
-	left: -287px;
 	z-index: -1;
 	font-size: 20px;
 	padding: 0 10px;
+	left: 0;
+	top: 0;
 }
 
 #contr-other-kc span {
@@ -273,12 +339,22 @@ blockquote {
 }
 
 #contr-other-km {
-	left: -574px;
 	text-align: right;
 }
 
 li.longer {
-	width: 1000px;
+	overflow: visible;
+	margin-left: -40px;
+	margin-top: 20px;
+}
+
+.super-input {
+	position: relative;
+
+	width: 278px;
+}
+.super-input span {
+	line-height: 41px;
 }
 
 ul {
@@ -318,9 +394,61 @@ input.error {
 }
 
 li.error-msg {
-	padding-left: 60px;
 	margin-top: 5px;
 }
+
+form input[type="submit"] {
+	width: 200px;
+	position: absolute;
+	left: 50%;
+	margin-left: -100px;
+	bottom: 30px;
+}
+
+.btn-blue {
+  border: none;
+  background: #3498db;
+  background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+  background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+  background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+  background-image: -o-linear-gradient(top, #3498db, #2980b9);
+  background-image: linear-gradient(to bottom, #3498db, #2980b9);
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+}
+
+.btn-blue:hover {
+  background: #3cb0fd;
+  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
+}
+
+#messanger {
+	margin-left: 10px;
+	font-size: 1em;
+}
+
+#messanger .msg {
+	margin-top: 10px;
+	text-align: center;
+}
+
+#messanger .msg-error {
+	color: red;
+}
+
+#messanger .msg-success {
+	font-weight: bold;
+}
+
+
 /* ==========================================================================
    Helper classes
    ========================================================================== */

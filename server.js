@@ -26,6 +26,8 @@ var SampleApp = function() {
 		return Math.min(1.0, self._current_contributions / TOTAL_SUM);
 	};
 
+	self.mails = {};
+
     /**
      *  Set up server IP address and port # using env variables/defaults.
      */
@@ -112,39 +114,19 @@ var SampleApp = function() {
 				if (err) {
 					res.json({
 						'success': false,
-						'errors': [err]
+						'errors': [err],
 					})
 					return;
 				}
 
 				self._current_contributions += data.contribution;
+				self.mails[doc._id] = doc.email;
 
-				self.app.mailer.send({
-						template: 'email',
-						attachments: [{
-							filename: 'blahoprani.pdf',
-							filePath: __dirname + '/attachments/jeden_svet.pdf'
-						}]
-					}, {
-						to: data.email,
-						subject: 'Hura Do Mexika',
-
-					}, function (err) {
-						if (err) {
-						  // handle error
-							res.json({
-								'success': false,
-								'errors': [err]
-							})
-							return;
-						}
-
-						res.json({
-							'success': true,
-							'current_pos': self.getCurrentPosition() 
-						});
-					} 
-				);
+				res.json({
+					'success': true,
+					'current_pos': self.getCurrentPosition(),
+					'id': doc._id
+				});
 			}
 		);
 	}
@@ -154,11 +136,6 @@ var SampleApp = function() {
      */
     self.createRoutes = function() {
         self.routes = { };
-
-        self.routes['/asciimo'] = function(req, res) {
-            var link = "http://i.imgur.com/kmbjB.png";
-            res.send("<html><body><img src='" + link + "'></body></html>");
-        };
 
 		self.routes['/donate'] = {
 			'post': function(req, res) {
@@ -211,27 +188,42 @@ var SampleApp = function() {
 			}
 		};
 
-		self.routes['/send'] = function(req, res) {
-			self.app.mailer.send({
+		self.routes['/send'] = {
+			'post': function(req, res) {
+				var id = req.body.id, email;
+
+				if (!id) {
+					res.json({'success': false, 'errors': ['Missing id']});
+					return;
+				}
+
+				email = self.mails[id];
+
+				if (!email) {
+					res.json({'success': false, 'errors': ['Ejha, toto by sa nemalo stat v DB este nie je email']});
+					return;	
+				} 
+
+				self.app.mailer.send({
 					template: 'email',
 					attachments: [{
 						filename: 'blahoprani.pdf',
 						filePath: __dirname + '/attachments/jeden_svet.pdf'
 					}]
 				}, {
-					to: 'morihladko@gmail.com',
-					subject: 'Hola',
+					to: email,
+					subject: 'Hura Do Mexika',
 
 				}, function (err) {
 					if (err) {
 					  // handle error
-					  console.log(err);
-					  res.send('There was an error sending the email');
-					  return;
+						res.json({'success': false, 'errors': [err]});
+						return;
 					}
-					res.send('Email Sent');
-				} 
-			);
+
+					res.json({'success': true});
+				});
+			}
 		};
 
         self.routes['/'] = function(req, res) {
@@ -325,25 +317,6 @@ mailer.extend(zapp.app, {
 	auth: {
 		user: 'huradomexika@gmail.com',
 		pass: 'atkaaradansaberu'
-	}
-});
-
-zapp.app.mailer.send({
-	template: 'email',
-	to: 'morihladko@gmail.com',
-	subject: 'Hola',
-	attachments: [{
-		filename: 'blahoprani.pdf',
-		path: __dirname + '/attachments/jeden_svet.pdf'
-	}]
-
-},
-function (err) {
-	if (err) {
-	  // handle error
-	  console.log(err);
-	  res.send('There was an error sending the email');
-	  return;
 	}
 });
 

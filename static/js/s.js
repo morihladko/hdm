@@ -3,7 +3,9 @@
 	var $btn, $form, $form_email, $form_name, 
 		$contribution_other, $contribution_other_km, $contribution_other_kc, $contribution_radios,
 		current_pos_promise,
-		messanger;
+		messanger,
+
+		KOEF = 5;
 
 	function str(msg) {
 		try {
@@ -130,7 +132,7 @@
 			var num = parseInt($contribution_other.val(), 10);
 			
 			if (isNaN(num) || num < 0) num = 0;
-			$contribution_other_km.text(num + ' km');
+			$contribution_other_km.text(num / KOEF + ' km');
 			$contribution_other_kc.html('<span>' + $contribution_other.val() + '</span> Kč');
 		}).on('keydown', function() {
 			$contribution_other_kc.html('');

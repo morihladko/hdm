@@ -276,7 +276,7 @@ blockquote {
 	width: 1058px;
 	background-color: rgba(255, 255, 255, 0.7);
 
-	padding-top: 60px;
+	padding-top: 40px;
 
 	border: 10px solid #00025f;
 
@@ -298,6 +298,7 @@ blockquote {
 
 #donate-form .nameemail {
 	padding-top: 73px;
+	width: 488px;
 }
 
 #donate-form .nameemail label {
@@ -446,6 +447,14 @@ form input[type="submit"] {
 
 #messanger .msg-success {
 	font-weight: bold;
+}
+
+.submit-info {
+	font-size: 12px;
+	width: 400px;
+	position: absolute;
+	right: 138px;
+	top: 248px;
 }
 
 

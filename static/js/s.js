@@ -103,7 +103,7 @@
 						global.currentPos = msg.current_pos;
 						global.mapAnimate();
 
-						messanger.success("Vdaka. Dojde mail");
+						messanger.success("Děkujeme, že jste nás posunuli.");
 					} else {
 						messanger.error(msg.errors);
 					}

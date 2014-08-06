@@ -8,7 +8,7 @@ var express = require('express'),
 	winston = require('winston'),
 	request = require('request'),
 	
-	TOTAL_SUM = 20000;
+	TOTAL_SUM = 40000;
 
 var logger = new (winston.Logger)({
 	transports: [
